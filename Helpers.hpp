@@ -234,6 +234,7 @@ namespace ECE141 {
         case Keywords::float_kw:
         case Keywords::integer_kw:
         case Keywords::varchar_kw:
+        case Keywords::boolean_kw:
           return true;
         default: return false;
       }

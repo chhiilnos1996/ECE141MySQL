@@ -118,25 +118,65 @@ namespace ECE141 {
   //** USE: get a list of values (identifiers, strings, numbers...)
   StatusResult ParseHelper::parseValueList(StringList &aList) {
     StatusResult theResult{noError};
-    
+    std::string current;
+    Token &theToken=tokenizer.current();;
+      
     while(theResult && tokenizer.more()) {
-      Token &theToken=tokenizer.current();
-      if(TokenType::string == theToken.type || TokenType::identifier==theToken.type || TokenType::number==theToken.type) {
-        aList.push_back(theToken.data);
-        if (!tokenizer.next()) break; //skip identifier...
-        if (comma == tokenizer.current().data[0]) tokenizer.next();
+      theToken=tokenizer.current();
+      //std::cout<<"token = "<<theToken.data<<std::endl;
+      if(semicolon==theToken.data[0]){
+          //std::cout<<"semi colon"<<std::endl;
+          break;
       }
       else if(right_paren==theToken.data[0]) {
-        break;
-      }
-      else if(semicolon==theToken.data[0]) {
-        break;
+          //std::cout<<"right paren"<<std::endl;
+          current.pop_back();
+          aList.push_back(current);
+          break;
       }
       else if(comma==theToken.data[0]) {
-        break;
+          //std::cout<<"comma"<<std::endl;
+          current.pop_back();
+          aList.push_back(current);
+          current = "";
       }
-      else break;//theResult.error=syntaxError;
+      else {
+           //std::cout<<"append"<<std::endl;
+           current.append(theToken.data);
+           current.append(" ");
+          //std::cout<<"current = "<<current<<std::endl;
+      }/*
+      else{
+          std::cout<<"need else handle"<<std::endl;
+          if (TokenType::function == theToken.type){
+              std::cout<<"function"<<std::endl;
+          }
+          else if (TokenType::keyword == theToken.type){
+              std::cout<<"keyword"<<std::endl;
+          }
+          else if (TokenType::operators == theToken.type){
+              std::cout<<"operators"<<std::endl;
+          }
+          else if (TokenType::timedate == theToken.type){
+              std::cout<<"timedate"<<std::endl;
+          }
+          else if (TokenType::punctuation == theToken.type){
+              std::cout<<"punctuation"<<std::endl;
+          }
+          else if (TokenType::unknown == theToken.type){
+              std::cout<<"unknown"<<std::endl;
+          }
+          break;
+      }*/
+      tokenizer.next();
     }
+      /*
+      std::cout<<"---------------------------------"<<std::endl;
+      std::cout<<"Value List = "<<std::endl;
+      for(auto str:aList){
+          std::cout<<str<<std::endl;
+      }
+      std::cout<<"----------------------------------"<<std::endl;*/
     return theResult;
   }
 

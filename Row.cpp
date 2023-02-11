@@ -89,6 +89,7 @@ namespace ECE141 {
           else if( std::holds_alternative<std::string>(it->second) ){
               //varchar 'V'
               aStream << "V," ;
+              //std::cout<<"writing: "<<std::get<std::string>(it->second)<<std::endl;
               aStream << std::get<std::string>(it->second) << "\t";
           }
           else if ( std::holds_alternative<std::string>(it->second) ){
@@ -110,12 +111,14 @@ namespace ECE141 {
       std::string theKVPair;
       while (getline(aStream, theKVPair, '\t')) {
           std::stringstream theKVPairStream{theKVPair};
+          //std::cout<<"theKVPairStream = "<<theKVPairStream.str()<<std::endl;
           std::string theKey;
           getline(theKVPairStream, theKey, ':');
           std::string theValueType;
           getline(theKVPairStream, theValueType, ',');
           std::string theValueString;
-          theKVPairStream >> theValueString;
+          getline(theKVPairStream, theValueString);
+          //std::cout<<"theValueString = "<<theValueString<<std::endl;
           Value theValue;
           if (theValueType=="B"){
               theResult = Helpers::stringValueToDataType(DataTypes::bool_type, theValueString, theValue);
@@ -134,6 +137,7 @@ namespace ECE141 {
           }
           
           if (theResult == StatusResult{noError}) {
+            
               set(theKey, theValue);
           }
           else return theResult;

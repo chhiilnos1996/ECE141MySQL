@@ -532,6 +532,7 @@ namespace ECE141 {
           //theRowPtr.get()->print();
           theRows.push_back(std::move(theRowPtr));
       }
+     
       
       // WHERE ExpressionList
       theResult = aQuery.filterWhere(theEntity, theRows);

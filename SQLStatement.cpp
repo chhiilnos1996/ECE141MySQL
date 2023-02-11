@@ -28,6 +28,7 @@ namespace ECE141 {
 
         if (!aTokenizer.skipIf('(')) return StatusResult{punctuationExpected};
 
+        //std::cout<<"parse attributes"<<std::endl;
         StatusResult theAttributeStatus;
         do theAttributeStatus = parseAttribute(aTokenizer);
         while (theAttributeStatus
@@ -46,12 +47,17 @@ namespace ECE141 {
         if (entity->getAttribute(theAttributeName)) return StatusResult{invalidAttribute};
 
         if (!aTokenizer.next() || TokenType::keyword != aTokenizer.current().type) return StatusResult{identifierExpected};
+        
+        //std::cout<<"parseAttribute 1"<<std::endl;
         Keywords theKeyword = aTokenizer.current().keyword;
+        //std::cout<<"theKeyword = "<<aTokenizer.current().data<<std::endl;
         if (!Helpers::isDatatype(theKeyword)) return StatusResult{identifierExpected};
 
+        //std::cout<<"parseAttribute 2"<<std::endl;
         DataTypes theDatatype = Helpers::getTypeForKeyword(theKeyword);
         if (DataTypes::no_type == theDatatype) return StatusResult{identifierExpected};
 
+        //std::cout<<"parseAttribute 3"<<std::endl;
         Attribute theAttribute(theAttributeName, theDatatype);
         if (DataTypes::varchar_type == theDatatype && aTokenizer.next() && aTokenizer.next() && TokenType::number == aTokenizer.current().type) {
            int theSize = std::atoi(aTokenizer.current().data.c_str()); 
@@ -59,6 +65,7 @@ namespace ECE141 {
 
            if (!aTokenizer.skipIf(')')) return StatusResult{punctuationExpected};
         }
+        //std::cout<<"parseAttribute 4"<<std::endl;
 
         while (aTokenizer.next() && (TokenType::punctuation != aTokenizer.current().type && "," != aTokenizer.current().data)) {
             if (Keywords::not_kw == aTokenizer.current().keyword) {
@@ -148,14 +155,17 @@ namespace ECE141 {
                           StringMap theMap;
                           for (size_t i = 0; i < attrList.size(); i++){
                               theMap[attrList[i]] = theValueList[i];
+                              //std::cout<<theValueList[i]<<std::endl;
                           }
 
                           std::unique_ptr<Row> theRow = std::make_unique<Row>(tableName, theMap);
                           rows.push_back(std::move(theRow));
                           if (rows.size() == 0) return StatusResult{valueExpected};
-
-                          if (',' == aTokenizer.current().data[0]) aTokenizer.next();
+                        
+                          //std::cout<<"current token = "<<aTokenizer.current().data<<std::endl;
                           if (';' == aTokenizer.current().data[0]) break;
+                          if (',' == aTokenizer.current().data[0]) aTokenizer.next();
+                          
                       }
                     }
                 }
@@ -163,6 +173,7 @@ namespace ECE141 {
             }
           }
         }
+        //std::cout<<"returning parse insert"<<std::endl;
         return StatusResult{noError};
     }
 

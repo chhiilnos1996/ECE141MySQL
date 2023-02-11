@@ -82,7 +82,7 @@ namespace ECE141 {
     return StatusResult{noError};
   }
 
-  StatusResult Storage::readStorable(uint32_t aPos, Storable& aStorable) {
+StatusResult Storage::readStorable(uint32_t aPos, Storable& aStorable) {
     StatusResult theResult = begin(std::ios::in);
     if (!theResult) return theResult;
 
