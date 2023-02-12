@@ -233,6 +233,7 @@ namespace ECE141 {
             //std::cout<<"catch join"<<std::endl;
             //std::cout<<aTokenizer.current().data<<std::endl;
             Keywords theJoinType=aTokenizer.current().keyword;
+            //std::cout<<"join type = "<<aTokenizer.current().data<<std::endl;
             theJoins.push_back(theJoinType);
             //yank the 'join-type' token (e.g. left, right)
             aTokenizer.next();
@@ -240,7 +241,7 @@ namespace ECE141 {
             
             // theTable
             if ( TokenType::identifier != aTokenizer.current().type){
-                //std::cout<<"aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
+                //std::cout<<"not identifier : aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
                 //std::cout<<"return 1 "<<std::endl;
                 return StatusResult{identifierExpected};
             }
@@ -258,7 +259,7 @@ namespace ECE141 {
         while(1){
             //LHS TableName.AttrName
             if (TokenType::identifier != aTokenizer.current().type){
-                //std::cout<<"aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
+                //std::cout<<"not identifier : aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
                 //std::cout<<"return 2 "<<std::endl;
                 return StatusResult{identifierExpected};
             }
@@ -268,6 +269,7 @@ namespace ECE141 {
             std::string theLHSAttrName = theCombined.substr(theCombined.find('.')+1);
             Operand theLHS(theLHSTableName, TokenType::identifier, theLHSAttrName);
             theLHSs.push_back(theLHS);
+            //std::cout<<"theLHSTableName = "<<theLHSTableName<<", theLHSAttrName = "<< theLHSAttrName<<std::endl;
             //=
             if(!aTokenizer.next() || !aTokenizer.skipIf(Operators::equal_op)) {
                 //std::cout<<"aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
@@ -276,7 +278,7 @@ namespace ECE141 {
             }
             //RHS field
             if (TokenType::identifier != aTokenizer.current().type){
-                //std::cout<<"aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
+                //std::cout<<"not identifier : aTokenizer.current().data = "<<aTokenizer.current().data<<std::endl;
                 //std::cout<<"return 4 "<<std::endl;
                 return StatusResult{identifierExpected};
             }
@@ -286,9 +288,10 @@ namespace ECE141 {
             std::string theRHSAttrName = theCombined.substr(theCombined.find('.')+1);
             Operand theRHS(theRHSTableName, TokenType::identifier, theRHSAttrName);
             theRHSs.push_back(theRHS);
+            //std::cout<<"theRHSTableName = "<<theRHSTableName<<", theRHSAttrName = "<< theRHSAttrName<<std::endl;
             // break if no and, skip and
             if (!aTokenizer.next() || Keywords::and_kw != aTokenizer.current().keyword){
-               // std::cout<<"break 5 "<<std::endl;
+                //std::cout<<"break 5 "<<std::endl;
                 break;
             }
             if(!aTokenizer.skipIf(Keywords::and_kw)) {
@@ -299,9 +302,11 @@ namespace ECE141 {
         
         // push back joins
         std::string thePrevTable = aDBQuery.getTableName();
+        //std::cout<<"thePrevTable = "<<thePrevTable<<std::endl;
         for(int i=0; i<theJoins.size(); i++){
             bool found = 0;
             for(int j=0;j<theLHSs.size();j++){
+                //std::cout<<"theLHSs[j].name = "<<theLHSs[j].name<<", theRHSs[j].name = "<<theRHSs[j].name<<std::endl;
                 bool theCond1 = (theLHSs[j].name == thePrevTable) && (theRHSs[j].name == theTables[i]);
                 bool theCond2 = (theLHSs[j].name == theTables[i]) && (theRHSs[j].name == thePrevTable);
                 if(theCond1 || theCond2){

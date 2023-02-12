@@ -292,6 +292,11 @@ namespace ECE141 {
             theTmpRows.push_back(std::move(theTableRow));
             return true;
       });
+      /*
+        std::cout<<"left table : "<<std::endl;
+        for(auto& rowPtr: theTmpRows){
+            rowPtr->print();
+        }*/
           
       // multiple joins
       for(int i=0;i<aJoinList.size();i++){
@@ -333,7 +338,11 @@ namespace ECE141 {
                 theRows.push_back(std::move(theTableRow));
                 return true;
           });
-          
+          /*
+          std::cout<<"right table : "<<std::endl;
+          for(auto& rowPtr: theRows){
+              rowPtr->print();
+          }*/
           //std::cout<<"joinTables 3"<<std::endl;
           // sort by LHS, RHS
           Operand theLHS = aJoinList[i].getLHS();

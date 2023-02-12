@@ -34,8 +34,8 @@ namespace ECE141 {
     
     TokenType   ttype; //is it a field, or const (#, string)...
     DataTypes   dtype;
-    std::string name;  //attr name
-    Value       value;
+    std::string name;  //table name
+    Value       value; //table attr
     size_t      entityId;
   };
   

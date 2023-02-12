@@ -43,6 +43,7 @@ namespace ECE141 {
         StatusResult parseJoin(Tokenizer& aTokenizer, DBQuery& aDBQuery);
         StatusResult run(std::ostream& aStream) override {
             if (joinList.size()==0){
+                //std::cout<<"no joins to do"<<std::endl;
                 return database->selectRows(dbQuery, aStream);
             }
             else{
